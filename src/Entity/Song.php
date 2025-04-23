@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: SongRepository::class)]
@@ -24,6 +25,12 @@ class Song
 
     #[ORM\Column(length: 255)]
     #[Groups(['song'])]
+    #[Assert\Length(
+        min: 3,
+        max: 5,
+        minMessage: 'Le nom de ton son doit est plus long que  {{ limit }} characters pelo !',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 55)]
