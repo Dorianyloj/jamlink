@@ -62,6 +62,7 @@ final class SongController extends AbstractController
     }
 
     #[Route('api/v1/song/{id}', name: 'api_get_song', methods: ['GET'])]
+    #[OA\Tag('Songs')]
     #[OA\Response(
         response: 200,
         description: 'Retourne le son de l\'id correspondant',
@@ -69,7 +70,6 @@ final class SongController extends AbstractController
             items: new OA\Items(ref: new Model(type: Song::class, groups: ['song']))
         )
     )]
-
     public function get(Song $id, SongRepository $songRepository, SerializerInterface $serializer): JsonResponse
     {
         $jsonData = $serializer->serialize($id, 'json');

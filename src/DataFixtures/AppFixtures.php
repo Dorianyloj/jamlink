@@ -2,20 +2,26 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Song;
+use Faker\Factory;
 use App\Entity\Pool;
+use App\Entity\Song;
+use App\Entity\User;
+use Faker\Generator;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Faker\Factory;
-use Faker\Generator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
 
     private Generator $faker;
-    public function __construct()
+
+    private $userPasswordHasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->faker = Factory::create('fr_FR');
+        $this->userPasswordHasher = $userPasswordHasher;
     }
     public function load(ObjectManager $manager): void
     {
@@ -40,6 +46,32 @@ class AppFixtures extends Fixture
                 ->addPool($pools[array_rand($pools, 1)]);
             $manager->persist($song);
         }
+
+        $users = [];
+        $user = new User();
+        $password = $this->userPasswordHasher->hashPassword($user, "password");
+        $user->setUsername('admin')
+            ->setPassword($password)
+            ->setRoles(["ROLE_ADMIN"]);
+
+        $manager->persist($user);
+
+        for ($i = 0; $i < 5; $i++) {
+            $user = new User();
+            $password = $this->faker->password(2, 6);
+
+            $user->setUsername($this->faker->name() . '@' . $password)
+                ->setPassword($this->userPasswordHasher->hashPassword($user, $password))
+                ->setRoles(["ROLE_USER"]);
+
+
+            $users[] = $user;
+            $manager->persist($user);
+        }
+
         $manager->flush();
     }
+
+
+
 }
