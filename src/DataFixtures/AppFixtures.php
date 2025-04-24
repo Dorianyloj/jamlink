@@ -34,10 +34,10 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 100; $i++) {
             # code...
             $song = new Song();
-            $song->setName($this->faker->name($i % 2 ? "male" : "female"));
-            $song->setArtiste("Kiss Husky" . $i);
-            $song->setStatus("on");
-            $song->addPool($pools[array_rand($pools, 1)]);
+            $song->setName($this->faker->name($i % 2 ? "male" : "female"))
+                ->setArtiste("Kiss Husky" . $i)
+                ->setStatus("on")
+                ->addPool($pools[array_rand($pools, 1)]);
             $manager->persist($song);
         }
         $manager->flush();

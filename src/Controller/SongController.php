@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class SongController extends AbstractController
 {
-    #[Route('api/v1/song', name: 'get_all_song', methods: ['GET'])]
+    #[Route('api/v1/song', name: 'api_get_all_song_', methods: ['GET'])]
     public function getAll(
         SongRepository $songRepository,
         TagAwareCacheInterface $cache,
@@ -31,7 +31,6 @@ final class SongController extends AbstractController
 
         $idCache = "getAllSongs";
         $jsonData = $cache->get($idCache, function (ItemInterface $item) use ($songRepository, $serializer) {
-            $item->tag("songsCache");
             $data = $songRepository->findAll();
             return $serializer->serialize($data, 'json', ['groups' => ["song"]]);
         });
@@ -40,14 +39,32 @@ final class SongController extends AbstractController
 
     }
 
-    #[Route('api/v1/song/{id}', name: 'get_song', methods: ['GET'])]
+    #[Route('api/v2/song', name: 'api_get_all_song', methods: ['GET'])]
+    public function getAllV2(
+        SongRepository $songRepository,
+        TagAwareCacheInterface $cache,
+        SerializerInterface $serializer
+    ): JsonResponse {
+
+
+        $idCache = "getAllSongs";
+        $jsonData = $cache->get($idCache, function (ItemInterface $item) use ($songRepository, $serializer) {
+            $data = $songRepository->findAll();
+            return $serializer->serialize($data, 'json', ['groups' => ["song"]]);
+        });
+
+        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+
+    }
+
+    #[Route('api/v1/song/{id}', name: 'api_get_song', methods: ['GET'])]
     public function get(Song $id, SongRepository $songRepository, SerializerInterface $serializer): JsonResponse
     {
         $jsonData = $serializer->serialize($id, 'json');
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
     }
 
-    #[Route('api/v1/song', name: 'create_song', methods: ['POST'])]
+    #[Route('api/v1/song', name: 'api_create_song', methods: ['POST'])]
     public function create(
         ValidatorInterface $validator,
         Request $request,
@@ -79,7 +96,7 @@ final class SongController extends AbstractController
     }
 
 
-    #[Route('api/v1/song/{id}', name: 'update_song', methods: ['PATCH'])]
+    #[Route('api/v1/song/{id}', name: 'api_update_song', methods: ['PATCH'])]
     public function update(
         Song $id,
         Request $request,
@@ -97,7 +114,7 @@ final class SongController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('api/v1/song/{id}', name: 'delete_song', methods: ['DELETE'])]
+    #[Route('api/v1/song/{id}', name: 'api_delete_song', methods: ['DELETE'])]
     public function delete(Song $id, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
 
