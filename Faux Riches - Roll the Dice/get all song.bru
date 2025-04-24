@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: localhost/api/v1/song/102
-  body: none
+  url: localhost/api/v1/song
+  body: multipartForm
   auth: inherit
+}
+
+body:multipart-form {
+  file: @file()
 }
