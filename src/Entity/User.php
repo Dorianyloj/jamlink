@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -20,6 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['music_group'])]
+    
     private ?string $username = null;
 
     /**
@@ -35,24 +38,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['music_group'])]
     private ?string $experience = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['music_group'])]
     private ?string $level = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['music_group'])]
     private ?string $location = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['music_group'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['music_group'])]
     private ?string $lastname = null;
 
     /**
      * @var Collection<int, Instrument>
      */
     #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'users')]
+    #[Groups(['music_group'])]
     private Collection $instruments;
 
     /**

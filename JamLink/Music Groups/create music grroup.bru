@@ -1,0 +1,22 @@
+meta {
+  name: create music grroup
+  type: http
+  seq: 3
+}
+
+post {
+  url: localhost/api/v1/musicgroup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "Coldplay",
+      "description": "Groupe très populaire msuqiue pop",
+      "location": "Los Angeles",
+      "leaderId": 24,
+      "maxMembers": 5,
+      "level": "EXPERT"
+  }
+}

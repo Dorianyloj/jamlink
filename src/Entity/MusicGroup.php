@@ -3,50 +3,62 @@
 namespace App\Entity;
 
 use App\Repository\MusicGroupRepository;
+use App\Traits\StatisticsPropertiesTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: MusicGroupRepository::class)]
 class MusicGroup
 {
+    use StatisticsPropertiesTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['music_group'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['music_group'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 500)]
+    #[Groups(['music_group'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['music_group'])]
     private ?string $location = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['music_group'])]
     private ?string $level = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $status = null;
-
     #[ORM\Column]
+    #[Groups(['music_group'])]
     private ?int $maxMembers = null;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'musicGroups')]
+    #[Groups(['music_group'])]
     private Collection $users;
 
     #[ORM\ManyToOne(inversedBy: 'leadingGroups')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['music_group'])]
     private ?User $userLeader = null;
 
     /**
      * @var Collection<int, MusicStyle>
      */
     #[ORM\ManyToMany(targetEntity: MusicStyle::class, mappedBy: 'groups')]
+    #[Groups(['music_group'])]
     private Collection $musicStyles;
 
     /**
@@ -118,18 +130,6 @@ class MusicGroup
     public function setLevel(string $level): static
     {
         $this->level = $level;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

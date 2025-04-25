@@ -23,8 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class SongController extends AbstractController
 {
-
-
     #[Route('api/v1/song', name: 'api_get_all_song', methods: ['GET'])]
     #[OA\Response(
         response: 200,
