@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Pool;
+use App\Entity\Rehearsal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Pool>
+ * @extends ServiceEntityRepository<Rehearsal>
  */
-class PoolRepository extends ServiceEntityRepository
+class RehearsalRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Pool::class);
+        parent::__construct($registry, Rehearsal::class);
     }
 
     //    /**
-    //     * @return Pool[] Returns an array of Pool objects
+    //     * @return Rehearsal[] Returns an array of Rehearsal objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
+    //            ->orderBy('r.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Pool
+    //    public function findOneBySomeField($value): ?Rehearsal
     //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

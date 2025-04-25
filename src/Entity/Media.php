@@ -37,6 +37,15 @@ class Media
 
     #[Vich\UploadableField("media", fileNameProperty: 'realPath', mimeType: "mime")]
     private ?File $file = null;
+
+    #[ORM\Column(length: 30)]
+    private ?string $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'media')]
+    private ?MusicGroup $musicGroup = null;
+
+    #[ORM\ManyToOne(inversedBy: 'media')]
+    private ?User $uploadedBy = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -124,5 +133,41 @@ class Media
     public function getFile(): ?File
     {
         return $this->file;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMusicGroup(): ?MusicGroup
+    {
+        return $this->musicGroup;
+    }
+
+    public function setMusicGroup(?MusicGroup $musicGroup): static
+    {
+        $this->musicGroup = $musicGroup;
+
+        return $this;
+    }
+
+    public function getUploadedBy(): ?User
+    {
+        return $this->uploadedBy;
+    }
+
+    public function setUploadedBy(?User $uploadedBy): static
+    {
+        $this->uploadedBy = $uploadedBy;
+
+        return $this;
     }
 }

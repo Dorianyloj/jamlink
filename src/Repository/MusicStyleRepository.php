@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Pool;
+use App\Entity\MusicStyle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Pool>
+ * @extends ServiceEntityRepository<MusicStyle>
  */
-class PoolRepository extends ServiceEntityRepository
+class MusicStyleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Pool::class);
+        parent::__construct($registry, MusicStyle::class);
     }
 
     //    /**
-    //     * @return Pool[] Returns an array of Pool objects
+    //     * @return MusicStyle[] Returns an array of MusicStyle objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
+    //            ->orderBy('m.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Pool
+    //    public function findOneBySomeField($value): ?MusicStyle
     //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
