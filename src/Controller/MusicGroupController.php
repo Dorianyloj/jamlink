@@ -141,4 +141,92 @@ final class MusicGroupController extends AbstractController
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+
+    #[Route('/api/v1/music-groups/{groupId}/add-members', name: 'api_add_members_to_music_group', methods: ['POST'])]
+    public function addMembers(
+        int $groupId,
+        Request $request,
+        MusicGroupRepository $musicGroupRepository,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $content = $request->toArray();
+        $userIds = $content['userIds'] ?? [];
+        
+        if (empty($userIds) || !is_array($userIds)) {
+            return new JsonResponse(['message' => 'userIds array is required in request body'], Response::HTTP_BAD_REQUEST);
+        }
+        
+        $musicGroup = $musicGroupRepository->find($groupId);
+        if (!$musicGroup) {
+            return new JsonResponse(['message' => 'Music group not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Vérifier si le groupe est déjà plein
+        if ($musicGroup->isFull()) {
+            return new JsonResponse([
+                'message' => 'Cannot add members: group has already reached maximum capacity',
+                'group_info' => [
+                    'current_members' => $musicGroup->getCurrentMemberCount(),
+                    'max_members' => $musicGroup->getMaxMembers(),
+                    'available_slots' => 0,
+                    'is_full' => true
+                ]
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $results = [
+            'success' => [],
+            'already_members' => [],
+            'not_found' => [],
+            'rejected_capacity_full' => []
+        ];
+
+        $addedCount = 0;
+        $availableSlots = $musicGroup->getAvailableSlots();
+
+        foreach ($userIds as $userId) {
+            if ($addedCount >= $availableSlots) {
+                $results['rejected_capacity_full'][] = $userId;
+                continue;
+            }
+
+            $user = $userRepository->find($userId);
+            
+            if (!$user) {
+                $results['not_found'][] = $userId;
+                continue;
+            }
+
+            if ($musicGroup->getUsers()->contains($user)) {
+                $results['already_members'][] = $userId;
+                continue;
+            }
+
+            $musicGroup->addUser($user);
+            $results['success'][] = $userId;
+            $addedCount++;
+        }
+
+        if (!empty($results['success'])) {
+            $entityManager->persist($musicGroup);
+            $entityManager->flush();
+        }
+
+        $message = count($results['success']) . ' user(s) added to music group';
+        if (!empty($results['rejected_capacity_full'])) {
+            $message .= '. ' . count($results['rejected_capacity_full']) . ' user(s) rejected due to capacity limit';
+        }
+
+        return new JsonResponse([
+            'message' => $message,
+            'group_info' => [
+                'current_members' => $musicGroup->getCurrentMemberCount(),
+                'max_members' => $musicGroup->getMaxMembers(),
+                'available_slots' => $musicGroup->getAvailableSlots(),
+                'is_full' => $musicGroup->isFull()
+            ],
+            'details' => $results
+        ], Response::HTTP_OK);
+    }
 }

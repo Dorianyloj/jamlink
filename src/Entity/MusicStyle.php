@@ -16,7 +16,7 @@ class MusicStyle
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     #[Groups(['music_group'])]
     private ?string $name = null;
 

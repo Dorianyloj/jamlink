@@ -1,0 +1,22 @@
+meta {
+  name: create advertisement
+  type: http
+  seq: 1
+}
+
+post {
+  url: localhost/api/v1/advertisement
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {  
+    "title": "Recherche guitariste pour groupe rock",  
+    "description": "Nous cherchons un guitariste passionné pour rejoindre notre groupe de rock local.",  
+    "location": "Paris",  
+    "radius": 20,  
+    "creatorId": 83,  
+    "instruments": [204]  
+  }
+}

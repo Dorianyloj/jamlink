@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: localhost/api/login_check
+  url: https://localhost/api/login_check
   body: json
   auth: inherit
 }
@@ -15,4 +15,8 @@ body:json {
     "username": "admin",
     "password": "password"
   }
+}
+
+vars:post-response {
+  access_token: res.body.token
 }

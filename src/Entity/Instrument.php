@@ -8,20 +8,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: InstrumentRepository::class)]
 class Instrument
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['instrument', 'advertisement'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
-    #[Groups(['music_group'])]
+    #[Groups(['music_group', 'user', 'instrument', 'advertisement'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 200)]
-    #[Groups(['music_group'])]
+    #[Groups(['music_group', 'user', 'instrument'])]
     private ?string $category = null;
 
     /**

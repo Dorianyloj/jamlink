@@ -4,6 +4,7 @@ namespace App\Serializer\Normalizer;
 
 use App\Entity\MusicGroup;
 use App\Entity\Song;
+use App\Entity\User;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,12 +43,15 @@ class AutoDiscoveryNormalizer implements NormalizerInterface
     public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
         // return true;
-        return ($data instanceof MusicGroup) && $format === "json";
+        return ($data instanceof MusicGroup || $data instanceof User) && $format === "json";  
         // TODO: return $data instanceof Object
     }
 
     public function getSupportedTypes(?string $format): array
     {
-        return [MusicGroup::class => true];
+        return [  
+            MusicGroup::class => true,  
+            User::class => true  
+        ]; 
     }
 }

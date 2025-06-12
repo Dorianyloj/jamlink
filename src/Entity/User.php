@@ -10,77 +10,82 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 180)]
-    #[Groups(['music_group'])]
-    
-    private ?string $username = null;
-
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
-
-    #[ORM\Column(length: 50)]
-    #[Groups(['music_group'])]
-    private ?string $experience = null;
-
-    #[ORM\Column(length: 20)]
-    #[Groups(['music_group'])]
-    private ?string $level = null;
-
-    #[ORM\Column(length: 200)]
-    #[Groups(['music_group'])]
-    private ?string $location = null;
-
-    #[ORM\Column(length: 50)]
-    #[Groups(['music_group'])]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 50)]
-    #[Groups(['music_group'])]
-    private ?string $lastname = null;
-
-    /**
-     * @var Collection<int, Instrument>
-     */
-    #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'users')]
-    #[Groups(['music_group'])]
-    private Collection $instruments;
-
-    /**
-     * @var Collection<int, MusicGroup>
-     */
-    #[ORM\ManyToMany(targetEntity: MusicGroup::class, inversedBy: 'users')]
-    private Collection $musicGroups;
-
-    /**
-     * @var Collection<int, MusicGroup>
-     */
-    #[ORM\OneToMany(targetEntity: MusicGroup::class, mappedBy: 'userLeader')]
-    private Collection $leadingGroups;
-
-    /**
-     * @var Collection<int, Media>
-     */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'uploadedBy')]
-    private Collection $media;
+    #[ORM\Id]  
+    #[ORM\GeneratedValue]  
+    #[ORM\Column]  
+    #[Groups(['user', 'music_group'])]  
+    private ?int $id = null;  
+  
+    #[ORM\Column(length: 180)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $username = null;  
+  
+    /**  
+     * @var list<string> The user roles  
+     */  
+    #[ORM\Column]  
+    #[Groups(['user'])]  
+    private array $roles = [];  
+  
+    /**  
+     * @var string The hashed password  
+     */  
+    #[ORM\Column]  
+    private ?string $password = null;  
+  
+    #[ORM\Column(length: 50)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $experience = null;  
+  
+    #[ORM\Column(length: 20)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $level = null;  
+  
+    #[ORM\Column(length: 200)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $location = null;  
+  
+    #[ORM\Column(length: 50)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $firstname = null;  
+  
+    #[ORM\Column(length: 50)]  
+    #[Groups(['user', 'music_group'])]  
+    private ?string $lastname = null;  
+  
+    /**  
+     * @var Collection<int, Instrument>  
+     */  
+    #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'users')]  
+    #[Groups(['user', 'music_group'])]  
+    private Collection $instruments;  
+  
+    /**  
+     * @var Collection<int, MusicGroup>  
+     */  
+    #[ORM\ManyToMany(targetEntity: MusicGroup::class, inversedBy: 'users')]  
+    #[Groups(['user'])]  
+    private Collection $musicGroups;  
+  
+    /**  
+     * @var Collection<int, MusicGroup>  
+     */  
+    #[ORM\OneToMany(targetEntity: MusicGroup::class, mappedBy: 'userLeader')]  
+    #[Groups(['user'])]  
+    private Collection $leadingGroups;  
+  
+    /**  
+     * @var Collection<int, Media>  
+     */  
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'uploadedBy')]  
+    // #[Groups(['user'])]  
+    private Collection $media; 
 
     public function __construct()
     {

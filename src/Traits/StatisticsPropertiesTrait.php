@@ -16,7 +16,7 @@ trait StatisticsPropertiesTrait
     #[Groups(['stats'])]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 25)]
     #[Groups(['stats'])]
     private ?string $status = null;
 

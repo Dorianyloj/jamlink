@@ -19,11 +19,11 @@ class MusicGroup
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['music_group'])]
+    #[Groups(['music_group', 'user', 'advertisement'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['music_group'])]
+    #[Groups(['music_group', 'user', 'advertisement'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 500)]
@@ -270,5 +270,37 @@ class MusicGroup
         }
 
         return $this;
+    }
+
+    /**
+     * Vérifie si le groupe a atteint sa capacité maximale
+     */
+    public function isFull(): bool
+    {
+        return $this->users->count() >= $this->maxMembers;
+    }
+
+    /**
+     * Retourne le nombre de places disponibles
+     */
+    public function getAvailableSlots(): int
+    {
+        return max(0, $this->maxMembers - $this->users->count());
+    }
+
+    /**
+     * Vérifie si on peut ajouter un certain nombre d'utilisateurs
+     */
+    public function canAddMembers(int $count = 1): bool
+    {
+        return ($this->users->count() + $count) <= $this->maxMembers;
+    }
+
+    /**
+     * Retourne le nombre actuel de membres
+     */
+    public function getCurrentMemberCount(): int
+    {
+        return $this->users->count();
     }
 }

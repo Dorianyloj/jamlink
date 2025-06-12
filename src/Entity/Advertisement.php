@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AdvertisementRepository::class)]
 class Advertisement
@@ -14,36 +15,46 @@ class Advertisement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['advertisement'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['advertisement'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 500)]
+    #[Groups(['advertisement'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'advertisements')]
+    #[Groups(['advertisement'])]
     private ?MusicGroup $creator = null;
 
     /**
      * @var Collection<int, Instrument>
      */
     #[ORM\ManyToMany(targetEntity: Instrument::class, inversedBy: 'advertisements')]
+    #[Groups(['advertisement'])]
     private Collection $instruments;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['advertisement'])]
     private ?string $location = null;
 
     #[ORM\Column]
+    #[Groups(['advertisement'])]
     private ?int $radius = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['advertisement'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['advertisement'])]
     private ?\DateTimeInterface $expiresAt = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['advertisement'])]
     private ?string $status = null;
 
     public function __construct()
