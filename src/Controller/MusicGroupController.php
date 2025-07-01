@@ -35,19 +35,12 @@ final class MusicGroupController extends AbstractController
     #[Route('api/v1/musicgroups', name: 'api_get_all_music_group', methods: ['GET'])]
     public function getAll(
         MusicGroupRepository $musicGroupRepository,
-        TagAwareCacheInterface $cache,
         SerializerInterface $serializer
     ): JsonResponse {
-
-
-        $idCache = "getAllMusicGroups";
-        $jsonData = $cache->get($idCache, function (ItemInterface $item) use ($musicGroupRepository, $serializer) {
-            $data = $musicGroupRepository->findAll();
-            return $serializer->serialize($data, 'json', ['groups' => ["music_group"]]);
-        });
+        $data = $musicGroupRepository->findAll();
+        $jsonData = $serializer->serialize($data, 'json', ['groups' => ["music_group"]]);
 
         return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
-
     }
 
     #[Route('api/v1/musicgroups/{id}', name: 'api_get_music_group', methods: ['GET'])]
@@ -98,8 +91,6 @@ final class MusicGroupController extends AbstractController
 
         $entityManager->persist($musicGroup);
         $entityManager->flush();
-
-        $cache->invalidateTags(['musicGroupsCache']);
 
         $jsonData = $serializer->serialize($musicGroup, 'json', [
             'groups' => ['music_group']

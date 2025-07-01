@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class AdvertisementController extends AbstractController
 {
@@ -123,5 +124,62 @@ final class AdvertisementController extends AbstractController
         $location = $urlGenerator->generate('api_get_advertisement', ['id' => $advertisement->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
     
         return new JsonResponse($jsonData, Response::HTTP_CREATED, ['Location' => $location], true);
+    }
+
+    #[Route('/api/v1/advertisement/{id}', name: 'api_update_advertisement', methods: ['PATCH'])]
+    public function update(
+        Advertisement $id,
+        Request $request,
+        SerializerInterface $serializer,
+        ValidatorInterface $validator,
+        EntityManagerInterface $entityManager,
+        TagAwareCacheInterface $cache,
+        MusicGroupRepository $musicGroupRepository,
+        InstrumentRepository $instrumentRepository
+    ): JsonResponse {
+        $content = $request->toArray();
+        $advertisement = $serializer->deserialize(
+            $request->getContent(),
+            Advertisement::class,
+            'json',
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $id]
+        );
+
+        // Gestion du creator (music group)
+        if (isset($content['creatorId'])) {
+            $creator = $musicGroupRepository->find($content['creatorId']);
+            if (!$creator) {
+                throw new NotFoundHttpException('Creator not found');
+            }
+            $advertisement->setCreator($creator);
+        }
+
+        // Gestion des instruments (remplacement complet)
+        if (isset($content['instruments']) && is_array($content['instruments'])) {
+            $advertisement->getInstruments()->clear();
+            foreach ($content['instruments'] as $instrumentId) {
+                $instrument = $instrumentRepository->find($instrumentId);
+                if ($instrument) {
+                    $advertisement->addInstrument($instrument);
+                } else {
+                    throw new NotFoundHttpException("Instrument with ID $instrumentId not found");
+                }
+            }
+        }
+
+        $errors = $validator->validate($advertisement);
+        if ($errors->count() > 0) {
+            return new JsonResponse(
+                $serializer->serialize($errors, 'json'),
+                JsonResponse::HTTP_BAD_REQUEST,
+                [],
+                true
+            );
+        }
+
+        $entityManager->persist($advertisement);
+        $entityManager->flush();
+        $cache->invalidateTags(['advertisementCache']);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

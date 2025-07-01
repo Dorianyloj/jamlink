@@ -1,0 +1,17 @@
+meta {
+  name: patch advertisement
+  type: http
+  seq: 3
+}
+
+patch {
+  url: https://localhost/api/v1/advertisement/70
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Projet musical ambitieux en cours de formation."
+  }
+}
